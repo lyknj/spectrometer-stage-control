@@ -5,12 +5,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import glob
 
+# Import core objects and functions from main.py
 from main import stage_x, stage_y, spec, scan, move_to_position, request_stop
 
-## custom widget class for stage control
+# Custom QWidget subclass to control the linear stages via GUI
 class StageWidget(QWidget):
 
-## initialize parent QWidget
+# Initialize parent QWidget
     def __init__(self):
         super().__init__()
 
@@ -18,7 +19,7 @@ class StageWidget(QWidget):
         loadUi('./test.ui', self) 
 
 
-        ## connect buttons
+        # Connect buttons
         self.home.clicked.connect(self.home_clicked)
         self.go.clicked.connect(self.go_clicked)
         self.stop.clicked.connect(self.stop_clicked)
@@ -77,7 +78,6 @@ class StageWidget(QWidget):
             print(f"No spectrum found for position ({x_target}, {y_target}).")
             return
 
-
         # Load and plot spectrum
         df = pd.read_csv(file_path)
         plt.figure(figsize=(8, 5))
@@ -90,35 +90,30 @@ class StageWidget(QWidget):
         plt.show()
 
 
-
-
 from PyQt5.QtWidgets import QMainWindow
 
-
-## constructor for main window
+# Main application window class that holds the StageWidget
 class StageGui(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Stage Controller")
 
-
-        # create widget and add it to the window
+        # Create the StageWidget and set it as the central widget
         self.stage_widget = StageWidget()
         self.setCentralWidget(self.stage_widget)
 
-
         self.show()
 
-
+    # Handle closing the widget and then the main window
     def closeEvent(self, *args, **kwargs):
-        self.stage_widget.close()
+        sef.stage_widget.close()
         super(QMainWindow, self).closeEvent(*args, **kwargs)
-
 
 import sys
 from PyQt5.QtWidgets import QApplication
 
 
+# Standard Qt application entry point
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = StageGui()
